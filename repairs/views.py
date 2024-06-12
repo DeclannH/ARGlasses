@@ -4,9 +4,9 @@ import json
 from pymongo import MongoClient
 from bson import ObjectId
 
-# MongoDB setup - Replace with your MongoDB connection details
+# MongoDB setup - Replace with our MongoDB from Declann
 client = MongoClient('mongodb://localhost:27017/')
-db = client['your_database_name']
+db = client['database_name']
 repairs_collection = db['repairs']
 
 @require_http_methods(["PATCH"])
@@ -39,3 +39,4 @@ def update_repair_status_and_steps(request, repair_id):
         return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'message': 'Repair updated successfully'}, status=200)
+ 

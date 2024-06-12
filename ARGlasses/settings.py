@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'repairs' # added for new repair application
+    'repairs', # added for new repair application
 ]
 
 MIDDLEWARE = [
