@@ -1,15 +1,21 @@
+# repairs/views.py
+
+from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 import json
 from pymongo import MongoClient
 from bson import ObjectId
 
-# MongoDB setup - Replace with our MongoDB from Declann
+# MongoDB setup - Replace with MongoDB info from Declann
 client = MongoClient('mongodb://localhost:27017/')
-db = client['database_name']
+db = client['your_database_name']
 repairs_collection = db['repairs']
 
-@require_http_methods(["PATCH"])
+def repair_form(request, repair_id):
+    return render(request, 'repairs/repair_form.html', {'repair_id': repair_id})
+
+@require_http_methods(["PATCH", "POST"])
 def update_repair_status_and_steps(request, repair_id):
     try:
         repair = repairs_collection.find_one({'_id': ObjectId(repair_id)})
@@ -18,7 +24,14 @@ def update_repair_status_and_steps(request, repair_id):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
-    data = json.loads(request.body)
+    if request.method == "POST":
+        data = {
+            'status': request.POST.get('status'),
+            'steps': request.POST.get('steps')
+        }
+    else:
+        data = json.loads(request.body)
+
     repair_status = data.get('status')
     repair_steps = data.get('steps')
 
@@ -39,4 +52,6 @@ def update_repair_status_and_steps(request, repair_id):
         return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'message': 'Repair updated successfully'}, status=200)
- 
+
+def home(request):
+    return render(request, 'home.html')
